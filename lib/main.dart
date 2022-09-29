@@ -45,7 +45,7 @@ class _PerguntaAppState extends State<PerguntaApp> {
       body: Column(
         children: <Widget>[
           Questao(perguntas[_perguntaSelecionada]['texto'].toString()),
-          ...respostas.map((t) => GeneralButton(t, _responder)).toList();
+          ...respostas.map((t) => GeneralButton(t, _responder)).toList()
         ],
       ),
     ));
