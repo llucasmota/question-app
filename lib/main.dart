@@ -5,10 +5,13 @@ import './questionario.dart';
 
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
-  void _responder() {
+  int _pontuacaoTotal = 0;
+
+  void _responder(int pontuacao) {
     if (haveASelectedAnswer) {
       setState(() {
         _perguntaSelecionada++;
+        _pontuacaoTotal += pontuacao;
       });
     }
   }
@@ -16,15 +19,30 @@ class _PerguntaAppState extends State<PerguntaApp> {
   final _perguntas = const [
     {
       'texto': 'Qual sua cor favorita?',
-      'respostas': ['Preto', 'Vermelho', 'Verde', 'Branco']
+      'respostas': [
+        {'pontuacao': 1, 'texto': 'Preto'},
+        {'pontuacao': 3, 'texto': 'Vermelho'},
+        {'pontuacao': 5, 'texto': 'Verde'},
+        {'pontuacao': 10, 'texto': 'Branco'}
+      ]
     },
     {
       'texto': 'Qual seu animal favorito?',
-      'respostas': ['Coelho', 'Cobra', 'Elefante', 'Leão']
+      'respostas': [
+        {'texto': 'Coelho', 'pontuacao': 1},
+        {'texto': 'Cobra', 'pontuacao': 5},
+        {'texto': 'Elefante', 'pontuacao': 5},
+        {'texto': 'Leão', 'pontuacao': 4}
+      ]
     },
     {
       'texto': 'Qual seu instrutor favorito?',
-      'respostas': ['Maria', 'João', 'Leo', 'Pedro']
+      'respostas': [
+        {'pontuacao': 1, 'texto': 'Maria'},
+        {'pontuacao': 3, 'texto': 'João'},
+        {'pontuacao': 5, 'texto': 'Leo'},
+        {'pontuacao': 9, 'texto': 'Pedro'}
+      ]
     }
   ];
 
@@ -34,10 +52,6 @@ class _PerguntaAppState extends State<PerguntaApp> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> respostas = haveASelectedAnswer
-        ? _perguntas[_perguntaSelecionada].cast()['respostas']
-        : [];
-
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
@@ -48,7 +62,7 @@ class _PerguntaAppState extends State<PerguntaApp> {
                     perguntas: _perguntas,
                     perguntaSelecionada: _perguntaSelecionada,
                     onSelection: _responder)
-                : Result()));
+                : Result(_pontuacaoTotal)));
   }
 }
 
