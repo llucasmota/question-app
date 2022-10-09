@@ -1,50 +1,75 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_perguntas/questao.dart';
-import './GeneralButton.dart';
+import './result.dart';
+
+import './questionario.dart';
 
 class _PerguntaAppState extends State<PerguntaApp> {
   var _perguntaSelecionada = 0;
-  void _responder() {
+  int _pontuacaoTotal = 0;
+
+  void _responder(int pontuacao) {
+    if (haveASelectedAnswer) {
+      setState(() {
+        _perguntaSelecionada++;
+        _pontuacaoTotal += pontuacao;
+      });
+    }
+  }
+
+  void _reiniciarQuestionario() {
     setState(() {
-      _perguntaSelecionada++;
+      _perguntaSelecionada = 0;
+      _pontuacaoTotal = 0;
     });
+  }
+
+  final _perguntas = const [
+    {
+      'texto': 'Qual sua cor favorita?',
+      'respostas': [
+        {'pontuacao': 1, 'texto': 'Preto'},
+        {'pontuacao': 3, 'texto': 'Vermelho'},
+        {'pontuacao': 5, 'texto': 'Verde'},
+        {'pontuacao': 10, 'texto': 'Branco'}
+      ]
+    },
+    {
+      'texto': 'Qual seu animal favorito?',
+      'respostas': [
+        {'texto': 'Coelho', 'pontuacao': 1},
+        {'texto': 'Cobra', 'pontuacao': 5},
+        {'texto': 'Elefante', 'pontuacao': 5},
+        {'texto': 'Leão', 'pontuacao': 4}
+      ]
+    },
+    {
+      'texto': 'Qual seu instrutor favorito?',
+      'respostas': [
+        {'pontuacao': 1, 'texto': 'Maria'},
+        {'pontuacao': 3, 'texto': 'João'},
+        {'pontuacao': 5, 'texto': 'Leo'},
+        {'pontuacao': 9, 'texto': 'Pedro'}
+      ]
+    }
+  ];
+
+  bool get haveASelectedAnswer {
+    return _perguntaSelecionada + 1 <= _perguntas.length;
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, Object>> perguntas = [
-      {
-        'texto': 'Qual sua cor favorita?',
-        'respostas': ['Preto', 'Vermelho', 'Verde', 'Branco']
-      },
-      {
-        'texto': 'Qual seu animal favorito?',
-        'respostas': ['Coelho', 'Cobra', 'Elefante', 'Leão']
-      },
-      {
-        'texto': 'Qual seu instrutor favorito?',
-        'respostas': ['Maria', 'João', 'Leo', 'Pedro']
-      }
-    ];
-
-    List<Widget> respostas = [];
-    for (String textResposta
-        in perguntas[_perguntaSelecionada].cast()['respostas']) {
-      respostas.add(GeneralButton(textResposta, _responder));
-    }
-
     return MaterialApp(
         home: Scaffold(
-      appBar: AppBar(
-        title: const Text('Perguntas'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Questao(perguntas[_perguntaSelecionada]['texto'].toString()),
-          ...respostas
-        ],
-      ),
-    ));
+            appBar: AppBar(
+              title: const Text('Perguntas'),
+            ),
+            body: haveASelectedAnswer
+                ? Questionario(
+                    perguntas: _perguntas,
+                    perguntaSelecionada: _perguntaSelecionada,
+                    onSelection: _responder)
+                : Result(_pontuacaoTotal, _reiniciarQuestionario)));
   }
 }
 
