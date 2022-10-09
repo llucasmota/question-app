@@ -16,6 +16,13 @@ class _PerguntaAppState extends State<PerguntaApp> {
     }
   }
 
+  void _reiniciarQuestionario() {
+    setState(() {
+      _perguntaSelecionada = 0;
+      _pontuacaoTotal = 0;
+    });
+  }
+
   final _perguntas = const [
     {
       'texto': 'Qual sua cor favorita?',
@@ -62,7 +69,7 @@ class _PerguntaAppState extends State<PerguntaApp> {
                     perguntas: _perguntas,
                     perguntaSelecionada: _perguntaSelecionada,
                     onSelection: _responder)
-                : Result(_pontuacaoTotal)));
+                : Result(_pontuacaoTotal, _reiniciarQuestionario)));
   }
 }
 
